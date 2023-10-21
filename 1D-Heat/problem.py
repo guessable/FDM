@@ -10,14 +10,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from grid import Grid
 
-class Problem:
+
+class Problem(Grid):
     """
     u_t = a * u_xx + f(x,t)
     """
 
-    def __init__(self, domain, a=1, case=1) -> None:
-        self.x_min, self.x_max, self.t_begin, self.t_end = domain
+    def __init__(self, domain, dx, dt, a=1, case=1) -> None:
+        super().__init__(domain, dx, dt)
         self.a = a
         self.case = case
 
@@ -63,13 +65,11 @@ class Problem:
 
 
 if __name__ == "__main__":
-    x = np.linspace(0, 2, 100)
-    t = np.linspace(0, 1, 100)
-
-    X, T = np.meshgrid(x, t)
-
-    problem = Problem([0, 2, 0, 1], case=4)
+    domain = [0, 2, 0, 1]
+    problem = Problem(domain, 0.01, 0.01, case=1)
 
     fig, ax = plt.subplots()
+    X, T = problem.X, problem.T
     ax.contourf(X, T, problem.solution(X, T))
+    ax.set_title(f"case:{problem.case}")
     plt.show()
