@@ -10,25 +10,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from grid import Grid
 
-
-class Problem(Grid):
+class Problem:
     """
     u_t + a*u_x = 0
     """
 
-    def __init__(self, domain, dx, dt, a=1, case=1) -> None:
-        super().__init__(domain, dx, dt)
+    def __init__(self, domain, a=1, case=1) -> None:
+        self.x_min, self.x_max, self.t_begin, self.t_end = domain
         self.a = a
         self.case = case
 
     def IC(self, x):
-        if self.case == 1:
-            ic = np.exp(-160 * (x - 1.5) ** 2)
-            idx = np.where((x >= 0.3) & (x <= 0.5))
-            ic[idx] = 1
-            return ic
+        match self.case:
+            case 1:
+                ic = np.exp(-160 * (x - 1.5) ** 2)
+                ic[np.where((x >= 0.25) & (x <= 0.75))] = 1
+                return ic
+            case 2:
+                ic = np.zeros_like(x)
+                ic[np.where(x <= 1)] = 1
+                return ic
+            case _:
+                return 0
 
     def solution(self, x, t):
         return self.IC(x - self.a * t)
@@ -42,10 +46,14 @@ class Problem(Grid):
 
 if __name__ == "__main__":
     domain = [0, 2, 0, 1]
-    problem = Problem(domain, 0.01, 0.01, case=1)
+    problem = Problem(domain, case=1)
 
-    fig, ax = plt.subplots()
-    X, T = problem.X, problem.T
+    x = np.linspace(0, 2, 100)
+    t = np.linspace(0, 1, 100)
+    X, T = np.meshgrid(x, t)
+
+    fig = plt.figure()
+    ax = fig.add_subplot()
     ax.contourf(X, T, problem.solution(X, T))
     ax.set_title(f"case:{problem.case}")
     plt.show()

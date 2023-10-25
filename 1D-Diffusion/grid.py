@@ -9,13 +9,14 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 from problem import Problem
 
 
 class Grid(Problem):
-    def __init__(self, domain, dx, dt, a=1, case=1):
-        super().__init__(domain, a, case)
+    def __init__(self, domain, dx, dt, case=1):
+        super().__init__(domain, case)
         self.dx = dx
         self.dt = dt
 
