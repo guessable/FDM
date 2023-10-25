@@ -31,6 +31,11 @@ class Problem:
                 ic = np.zeros_like(x)
                 ic[np.where(x <= 1)] = 1
                 return ic
+            case 3:
+                ic = np.zeros_like(x)
+                ic[np.where(x <= 1)] = 2
+                ic[np.where((x > 1) & (x <= 2))] = 1
+                return ic
             case _:
                 return 0
 
