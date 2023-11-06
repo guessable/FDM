@@ -15,7 +15,7 @@ from problem import Problem
 
 
 class Grid(Problem):
-    def __init__(self, domain, dx, dt, case=1):
+    def __init__(self, domain: list, dx: float, dt: float, case=1) -> None:
         super().__init__(domain, case)
         self.dx = dx
         self.dt = dt
@@ -35,7 +35,7 @@ class Grid(Problem):
         self.u_num[0, :] = self.bc0(self.t)
         self.u_num[self.nx - 1, :] = self.bc1(self.t)
 
-    def plot_grid(self):
+    def plot_grid(self) -> None:
         ax = plt.subplot()
         ax.scatter(self.X[1:-1], self.T[1:-1], marker="*")
         ax.scatter(self.X[[0, -1], :], self.T[[0, -1], :], marker="^", label="BC")

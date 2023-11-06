@@ -13,31 +13,53 @@ import matplotlib.pyplot as plt
 
 class Problem:
     """
-    u_t = a*u_xx+b*u_yy + f(x,y,t)
+    u_t + au_x + bu_y = 0
     """
 
-    def __init__(self, domain, t_begin, t_end, a=1, b=1, case=1):
-        self.x_min, self.x_max, self.y_min, self.y_max = domain
-        self.t_begin = t_begin
-        self.t_end = t_end
+    def __init__(self, domain: list, a=1, b=1, case=1):
+        self.x_min, self.x_max, self.y_min, self.y_max, self.t0, self.t1 = domain
         self.case = case
         self.a = a
         self.b = b
 
-    def solution(self, x, y, t):
+    def ic(self, x, y):
         match self.case:
             case 1:
-                return np.sin(np.pi * (x + y + t))
+                ic = np.ones_like(x)
+                ic[(x >= 0.5) & (y >= 0.5)] = 0
+                return ic
             case _:
                 return 0
 
-    def f(self, x, y, t):
-        match self.case:
-            case 1:
-                return np.pi * (
-                    np.cos(np.pi * (x + y + t))
-                    + self.a * np.pi * np.sin(np.pi * (x + y + t))
-                    + self.b * np.pi * np.sin(np.pi * (x + y + t))
-                )
-            case _:
-                return 0
+    def solution(self, x, y, t):
+        return self.ic(x - self.a * t, y - self.b * t)
+
+    def bc_x0(self, y, t):
+        return self.solution(self.x_min, y, t)
+
+    def bc_x1(self, y, t):
+        return self.solution(self.x_max, y, t)
+
+    def bc_y0(self, x, t):
+        return self.solution(x, self.y_min, t)
+
+    def bc_y1(self, x, t):
+        return self.solution(x, self.y_max, t)
+
+
+if __name__ == "__main__":
+    domain = [0, 1, 0, 1, 0, 1]
+    x = np.linspace(0, 2, 50)
+    y = np.linspace(0, 2, 50)
+    t = np.linspace(0, 1, 50)
+
+    X, Y = np.meshgrid(x, y)
+    problem = Problem(domain)
+
+    ic = problem.ic(X, Y)
+
+    fig = plt.figure()
+    ax = fig.add_subplot()
+
+    ax.contourf(X, Y, ic)
+    plt.show()

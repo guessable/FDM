@@ -16,12 +16,12 @@ class Problem:
     u_t + a*u_x = 0
     """
 
-    def __init__(self, domain, a=1, case=1) -> None:
+    def __init__(self, domain: list, a=1, case=1) -> None:
         self.x_min, self.x_max, self.t_begin, self.t_end = domain
         self.a = a
         self.case = case
 
-    def IC(self, x):
+    def IC(self, x: np.ndarray) -> np.ndarray | int:
         match self.case:
             case 1:
                 ic = np.exp(-160 * (x - 1.5) ** 2)
@@ -36,16 +36,20 @@ class Problem:
                 ic[np.where(x <= 1)] = 2
                 ic[np.where((x > 1) & (x <= 2))] = 1
                 return ic
+            case 4:
+                return np.sin(10 * x)
+            case 5:
+                return (1 / (np.exp(x))) * np.sin(1 / (x**2 + 1)) + np.sin(100 * x)
             case _:
                 return 0
 
-    def solution(self, x, t):
+    def solution(self, x: np.ndarray, t: np.ndarray) -> np.ndarray:
         return self.IC(x - self.a * t)
 
-    def bc0(self, t):
+    def bc0(self, t: np.ndarray) -> np.ndarray:
         return self.solution(self.x_min, t)
 
-    def bc1(self, t):
+    def bc1(self, t: np.ndarray) -> np.ndarray:
         return self.solution(self.x_max, t)
 
 

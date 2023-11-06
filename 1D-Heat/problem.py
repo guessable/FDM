@@ -16,12 +16,12 @@ class Problem:
     u_t = a * u_xx + f(x,t)
     """
 
-    def __init__(self, domain, a=1, case=1) -> None:
+    def __init__(self, domain: list, a=1, case=1) -> None:
         self.x_min, self.x_max, self.t_begin, self.t_end = domain
         self.a = a
         self.case = case
 
-    def solution(self, x, t):
+    def solution(self, x: np.ndarray, t: np.ndarray) -> np.ndarray | int:
         match self.case:
             case 1:
                 return x * (1 - x)
@@ -36,7 +36,7 @@ class Problem:
             case _:
                 return 0
 
-    def f(self, x, t):
+    def f(self, x: np.ndarray, t: np.ndarray) -> np.ndarray | int:
         match self.case:
             case 1:
                 return 2
@@ -58,13 +58,13 @@ class Problem:
             case _:
                 return 0
 
-    def bc0(self, t):
+    def bc0(self, t: np.ndarray) -> np.ndarray:
         return self.solution(self.x_min, t)
 
-    def bc1(self, t):
+    def bc1(self, t: np.ndarray) -> np.ndarray:
         return self.solution(self.x_max, t)
 
-    def IC(self, x):
+    def IC(self, x: np.ndarray) -> np.ndarray:
         return self.solution(x, self.t_begin)
 
 
