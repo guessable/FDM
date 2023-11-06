@@ -98,7 +98,7 @@ class Scheme(Grid):
         u_num = spsolve(A, b)
         return u_num
 
-    def nine(self):
+    def nine(self) -> np.ndarray:
         indptr, indices, data = [0], [], []
         b = np.zeros(self.nx * self.ny)
         for i in range(self.nx):
